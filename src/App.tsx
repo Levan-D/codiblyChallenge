@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "./app/hooks"
 import { getData } from "./slice/pageSlice"
 import Modal from "./components/Modal"
 import Pagination from "./components/Pagination"
+import Input from "./components/Input"
 
 function App() {
   const dispatch = useAppDispatch()
@@ -16,12 +17,13 @@ function App() {
 
   useEffect(() => {
     if (data.length === 0 && !loading) {
-      dispatch(getData({ data: 1 }))
+      dispatch(getData({ data: 1, callType: "base" }))
     }
   }, [])
 
   return (
-    <div className="App max-w-4xl mx-auto">
+    <div className="App max-w-2xl mx-auto mt-[20vh]">
+      <Input />
       <ProductDisplay />
       <Modal />
       <Pagination />

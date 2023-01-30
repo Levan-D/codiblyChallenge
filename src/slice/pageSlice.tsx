@@ -7,15 +7,20 @@ import axios from "axios"
 
 export const getData = createAsyncThunk(
   "data/get",
-  async ({ data }: { data: number }, { rejectWithValue }) => {
-    console.log(data)
+  async ({ data, callType }: { data: number; callType: string }, { rejectWithValue }) => {
+    let url
+    if (callType === "base") {
+      url = `https://reqres.in/api/products?page=${data}&per_page=5`
+    } else if (callType === "id") {
+      url = `https://reqres.in/api/products?id=${data}`
+    }
+
     try {
       const response = await axios({
         method: "get",
-        url: `https://reqres.in/api/products?page=${data}&per_page=5`,
+        url: url,
         headers: {},
       })
-
       return response
     } catch (error) {
       return rejectWithValue(error)
@@ -35,6 +40,8 @@ interface InitialState {
   modalData: Data | undefined
   getDataStatus: {
     error: boolean
+    errorMessage: string
+    errorStatus: string
     loading: boolean
     success: boolean
   }
@@ -48,6 +55,8 @@ const initialState: InitialState = {
   modalData: undefined,
   getDataStatus: {
     error: false,
+    errorMessage: "",
+    errorStatus: "",
     loading: false,
     success: false,
   },
@@ -79,14 +88,27 @@ const pageSlice = createSlice({
         state.getDataStatus.loading = false
         state.getDataStatus.success = true
 
-        state.data = action.payload.data.data
+        if (Array.isArray(action.payload.data.data)) {
+          state.data = action.payload.data.data
+        } else state.data = [action.payload.data.data]
+
         state.currentPage = action.payload.data.page
         state.totalPages = action.payload.data.total_pages
       })
       .addCase(getData.rejected, (state, action: PayloadAction<any>) => {
         state.getDataStatus.loading = false
+        state.getDataStatus.error = true
+        state.data = []
+        state.currentPage = undefined
+        state.totalPages = undefined
 
-        // state.getDataStatus.error = action.payload.message
+        if (
+          action.payload.request?.status.toString().startsWith(4) ||
+          action.payload.request?.status.toString().startsWith(5)
+        ) {
+          state.getDataStatus.errorMessage = action.payload.message
+          state.getDataStatus.errorStatus = action.payload.request.status
+        } else state.getDataStatus.errorMessage = "Unknown Error"
       })
   },
 })
