@@ -7,21 +7,25 @@ import axios from "axios"
 
 export const getData = createAsyncThunk(
   "data/get",
-  async ({ data, callType }: { data: number; callType: string }, { rejectWithValue }) => {
+  async (
+    { data, callType }: { data: number | string; callType: string },
+    { rejectWithValue }
+  ) => {
     let url
     if (callType === "base") {
-      url = `https://reqres.in/api/products?page=${data}&per_page=5`
+      url = `page=${data}&per_page=5`
     } else if (callType === "id") {
-      url = `https://reqres.in/api/products?id=${data}`
+      url = `id=${data}`
+    } else if (callType === "copy") {
+      url = data
     }
-
     try {
       const response = await axios({
         method: "get",
-        url: url,
+        url: "https://reqres.in/api/products?" + url,
         headers: {},
       })
-      return response
+      return { response: response, url: url }
     } catch (error) {
       return rejectWithValue(error)
     }
@@ -60,6 +64,7 @@ const initialState: InitialState = {
     loading: false,
     success: false,
   },
+
   currentPage: undefined,
   totalPages: undefined,
   data: [],
@@ -88,12 +93,14 @@ const pageSlice = createSlice({
         state.getDataStatus.loading = false
         state.getDataStatus.success = true
 
-        if (Array.isArray(action.payload.data.data)) {
-          state.data = action.payload.data.data
-        } else state.data = [action.payload.data.data]
+        window.history.replaceState(null, "New Page Title", `?${action.payload.url}`)
 
-        state.currentPage = action.payload.data.page
-        state.totalPages = action.payload.data.total_pages
+        if (Array.isArray(action.payload.response.data.data)) {
+          state.data = action.payload.response.data.data
+        } else state.data = [action.payload.response.data.data]
+
+        state.currentPage = action.payload.response.data.page
+        state.totalPages = action.payload.response.data.total_pages
       })
       .addCase(getData.rejected, (state, action: PayloadAction<any>) => {
         state.getDataStatus.loading = false

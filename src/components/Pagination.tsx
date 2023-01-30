@@ -54,7 +54,7 @@ const Pagination = () => {
                   currentPage === 1 && "opacity-20"
                 } cursor-pointer hover:bg-slate-400 px-2 rounded-md hover:text-slate-900`}
               >
-                Prev
+                &#8592;
               </div>
               {pages.map((page, i) => (
                 <div
@@ -73,7 +73,7 @@ const Pagination = () => {
                   currentPage === totalPages && "opacity-20"
                 } cursor-pointer hover:bg-slate-400 px-2 rounded-md hover:text-slate-900`}
               >
-                Next
+                &#8594;
               </div>
             </div>
           )}

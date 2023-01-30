@@ -23,8 +23,14 @@ const Input = () => {
     }
   }
   return (
-    <div className="bg-slate-800  p-2 rounded-lg mb-4">
-      <form onSubmit={handleFormSubmit}>
+    <div className="bg-slate-800  p-2 rounded-lg mb-4 flex ">
+      <div
+        onClick={() => dispatch(getData({ data: 1, callType: "base" }))}
+        className=" h-7 text-2xl font-bold px-2 sm:hover:brightness-90 active:brightness-75 duration-200 cursor-pointer"
+      >
+        &#8635;
+      </div>
+      <form className="grow" onSubmit={handleFormSubmit}>
         <div className="flex justify-between">
           <input
             type="number"

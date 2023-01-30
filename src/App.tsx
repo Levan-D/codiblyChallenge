@@ -14,10 +14,13 @@ function App() {
     data,
     getDataStatus: { loading },
   } = useAppSelector(store => store.page)
+  const queryString = window.location.search
 
   useEffect(() => {
     if (data.length === 0 && !loading) {
-      dispatch(getData({ data: 1, callType: "base" }))
+      if (queryString) {
+        dispatch(getData({ data: queryString.slice(1), callType: "copy" }))
+      } else dispatch(getData({ data: 1, callType: "base" }))
     }
   }, [])
 
