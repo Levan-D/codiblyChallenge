@@ -25,7 +25,7 @@ function App() {
   }, [])
 
   return (
-    <div className="App max-w-2xl mx-auto mt-[20vh]">
+    <div className="App mx-auto mt-[20vh] max-w-2xl">
       <Input />
       <ProductDisplay />
       <Modal />

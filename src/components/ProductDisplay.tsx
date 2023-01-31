@@ -12,19 +12,19 @@ const ProductDisplay = () => {
 
   if (error) {
     return (
-      <div className="min-h-[370px] bg-slate-800  p-2 rounded-lg ">
-        <div className="text-lg text-red-500 text-center mt-28">
+      <div className="min-h-[370px] rounded-lg  bg-slate-800 p-2 ">
+        <div className="mt-28 text-center text-lg text-red-500">
           {" "}
           Error: {errorStatus}
         </div>
-        <div className="text-lg text-red-500 text-center "> {errorMessage}</div>
-        <div className="text-lg  text-center"> Please, try again later</div>
+        <div className="text-center text-lg text-red-500 "> {errorMessage}</div>
+        <div className="text-center  text-lg"> Please, try again later</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-[370px] bg-slate-800  p-2 rounded-lg">
+    <div className="min-h-[370px] rounded-lg  bg-slate-800 p-2">
       {data.length !== 0 &&
         data.map((row, i) => (
           <div key={i} className=" mb-4 last:mb-0">
